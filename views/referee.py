@@ -17,7 +17,7 @@ if "my_data" in st.session_state:
         data = st.session_state["my_data"]
         Total = data[["Chest_no","full name","Date Of Birth",'Mobile Number','Email address','Blood Group ','Emergency Contact  Mobile no','Address',"Age Group","Event 1","Event 2","Event 3"]].copy()
         Total_list = Total.values.tolist()            
-        chunks_total = chunk_list(Total_list, 7)
+        chunks_total = chunk_list(Total_list, 10)
       
     else:
         data  = pd.DataFrame() 
@@ -124,19 +124,6 @@ if parti is not None and not parti.empty:
     selected = ['full name','Sex','Age Group','Chest_no','Date Of Birth','Event 1','Event 2','Event 3']
     st.dataframe(parti[selected].reset_index(drop=True),use_container_width=True)
 
-def chunk_athletes(athletes, chunk_size=15):
-    chunks = []
-    for i in range(0, len(athletes), chunk_size):
-        chunk = athletes[i:i + chunk_size]
-        # If the last chunk has fewer than 10 participants, fill the rest with empty entries
-        while len(chunk) < chunk_size:
-            chunk.append(["", "", ""])
-        chunks.append(chunk)
-    return chunks
-
-if athletes:
-    athlete_chunks = chunk_athletes(athletes)
-
 
 # Template mapping
 template_mapping = {
@@ -162,6 +149,21 @@ template_mapping = {
     "Pole Vault": "jumping_template.docx",
     "Total List":"Total_list.docx"
 }
+
+def chunk_athletes(athletes, chunk_size=15):
+    chunks = []
+    for i in range(0, len(athletes), chunk_size):
+        chunk = athletes[i:i + chunk_size]
+        # If the last chunk has fewer than 10 participants, fill the rest with empty entries
+        while len(chunk) < chunk_size:
+            chunk.append(["", "", ""])
+        chunks.append(chunk)
+    return chunks
+
+if template_mapping.get(sub_event) == "jumping_template.docx":
+    athlete_chunks = chunk_athletes(athletes,9)
+else:
+    athlete_chunks = chunk_athletes(athletes)
 
 def create_zip_of_docx_files(athlete_chunks, schedule_time, date, event, sub_event, age, gender):
     zip_io = BytesIO()
@@ -236,13 +238,7 @@ if colc.button("Generate Referee Sheet"):
         st.warning("Please fill out all required fields to generate the document.")
 
 tot = "Total List"
-# Total = data[["Chest_no","full name","Date Of Birth",'Mobile Number','Email address','Blood Group ','Emergency Contact  Mobile no','Address',"Age Group","Event 1","Event 2","Event 3"]].copy()  
-# Total_list = Total.values.tolist()
 
-# def chunk_list(lst,n):
-#     return [lst[i:i + n] for i in range(0, len(lst), n)]
-    
-# chunks_total = chunk_list(Total_list, 7)
     
 def create_zip_of_docx_files(chunks_total):
     zip_io = BytesIO()
