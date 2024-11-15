@@ -60,7 +60,7 @@ if "my_data" in st.session_state:
         # Access the DataFrame
         Data = st.session_state["my_data"]
     else:
-        data  = pd.DataFrame() 
+        Data  = pd.DataFrame() 
         st.info("No data loaded yet. Please upload a file first on the main page.")    
 
 events_df = pd.melt(Data, id_vars=['full name', 'Age Group', 'Sex'],
