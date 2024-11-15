@@ -23,11 +23,10 @@ def get_age_group(birthday):
     for group, (start_date, end_date) in age_groups.items():
         if pd.to_datetime(start_date) <= birthday <= pd.to_datetime(end_date):
             return group
-    return 'Other'
+    return '0'
 
 def process_data(data):
     data[['Event 1', 'Event 2', 'Event 3']] = data[['Event 1', 'Event 2', 'Event 3']].apply(lambda col: col.map(lambda x: x.title() if isinstance(x, str) else x))
-    data['Birthday'] = pd.to_datetime(data['Date Of Birth'],errors = 'coerce')
     data['Age Group'] = data['Birthday'].apply(get_age_group)
     data["Mobile Number"] = data["Mobile Number"].apply(lambda x: str(int(x)) if pd.notnull(x) else "")
     data['Emergency Contact  Mobile no'] = data['Emergency Contact  Mobile no'].apply(lambda x: str(int(x)) if pd.notnull(x) else "")
@@ -53,10 +52,16 @@ if uploaded_file is not None:
     else:
         d = pd.ExcelFile(uploaded_file) 
         Data = pd.read_excel(d,sheet_name = "Form responses 1")
-        data = Data[['Name', 'Initial(s) (can use space)','7. Date of Birth', 'Mobile Number','Email address','Sex ', 'Blood Group ','Emergency Contact  Mobile no','Address','Age (As on 22.02.2025)',
+        data = Data[['Name', 'Initial(s) (can use space)','7. Date of Birth', 'Mobile Number','Email address','Sex ', 'Blood Group ','Emergency Contact  Mobile no','Address ','Age (As on 22.02.2025)',
                     'Event 1', 'Event 2', 'Event 3']].copy()
         data['Member Status'] = Data.iloc[:, 21].fillna(Data.iloc[:, 34])
-        data['Member Status'] = data['Member Status'].str.lower().apply(lambda x: 'New' if 'new member' in x else 'Old')
+        # data['Member Status'] = data['Member Status'].str.lower().apply(lambda x: 'New' if 'new member' in x else 'Old')
+        data['Member Status'] = (
+    data['Member Status']
+    .fillna('')  # Convert NaN to an empty string
+    .str.lower()
+    .apply(lambda x: 'New' if 'new member' in x else 'Old')
+)
         data.rename(columns={'7. Date of Birth': 'Date Of Birth','Sex ':'Sex'}, inplace=True)
 
         # Convert '7. Date of Birth' to datetime format
@@ -84,7 +89,7 @@ if uploaded_file is not None:
             data['Date Of Birth'] = data['Date Of Birth'].dt.strftime('%d-%m-%Y')
             data.drop(columns=['Birthday','Name','Initial(s) (can use space)'], inplace=True)
             data = data.reset_index(drop=True)    #############
-            data = data[['Chest_no','full name','Date Of Birth', 'Age Group','Mobile Number','Email address','Sex', 'Blood Group ','Emergency Contact  Mobile no','Address','Age (As on 22.02.2025)',
+            data = data[['Chest_no','full name','Date Of Birth', 'Age Group','Mobile Number','Email address','Sex', 'Blood Group ','Emergency Contact  Mobile no','Address ','Age (As on 22.02.2025)',
                     'Event 1', 'Event 2', 'Event 3','Member Status']].copy()
             
             
