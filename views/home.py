@@ -55,6 +55,8 @@ if uploaded_file is not None:
         Data = pd.read_excel(d,sheet_name = "Form responses 1")
         data = Data[['Name', 'Initial(s) (can use space)','7. Date of Birth', 'Mobile Number','Email address','Sex ', 'Blood Group ','Emergency Contact  Mobile no','Address','Age (As on 22.02.2025)',
                     'Event 1', 'Event 2', 'Event 3']].copy()
+        data['Member Status'] = Data.iloc[:, 21].fillna(Data.iloc[:, 34])
+        data['Member Status'] = data['Member Status'].str.lower().apply(lambda x: 'New' if 'new member' in x else 'Old')
         data.rename(columns={'7. Date of Birth': 'Date Of Birth','Sex ':'Sex'}, inplace=True)
 
         # Convert '7. Date of Birth' to datetime format
@@ -83,7 +85,7 @@ if uploaded_file is not None:
             data.drop(columns=['Birthday','Name','Initial(s) (can use space)'], inplace=True)
             data = data.reset_index(drop=True)    #############
             data = data[['Chest_no','full name','Date Of Birth', 'Age Group','Mobile Number','Email address','Sex', 'Blood Group ','Emergency Contact  Mobile no','Address','Age (As on 22.02.2025)',
-                    'Event 1', 'Event 2', 'Event 3']].copy()
+                    'Event 1', 'Event 2', 'Event 3','Member Status']].copy()
             
             
         filter = st.button("Apply Filters")
