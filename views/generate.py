@@ -59,28 +59,29 @@ if "my_data" in st.session_state:
     if isinstance(st.session_state["my_data"], pd.DataFrame):
         # Access the DataFrame
         Data = st.session_state["my_data"]
-    else:
-        Data  = pd.DataFrame() 
-        st.info("No data loaded yet. Please upload a file first on the main page.")    
-
-events_df = pd.melt(Data, id_vars=['full name', 'Age Group', 'Sex'],
+        events_df = pd.melt(Data, id_vars=['full name', 'Age Group', 'Sex'],
                     value_vars=['Event 1', 'Event 2', 'Event 3'],
                     var_name='Event_Type', value_name='Event')
 
-events_df = events_df.dropna(subset=['Event'])
-grouped_df = events_df.groupby(['Event', 'Age Group', 'Sex']).size().reset_index(name='Participant_Count')
+        events_df = events_df.dropna(subset=['Event'])
+        grouped_df = events_df.groupby(['Event', 'Age Group', 'Sex']).size().reset_index(name='Participant_Count')
 
-# Pivot and calculate the total for Male and Female, with sum aggregation
-pivot_df = grouped_df.pivot_table(index=['Event', 'Age Group'], columns='Sex', values='Participant_Count', aggfunc='sum', fill_value=0)
+        # Pivot and calculate the total for Male and Female, with sum aggregation
+        pivot_df = grouped_df.pivot_table(index=['Event', 'Age Group'], columns='Sex', values='Participant_Count', aggfunc='sum', fill_value=0)
 
-# Create the total column
-pivot_df['Total'] = pivot_df.get('Female', 0) + pivot_df.get('Male', 0)
+        # Create the total column
+        pivot_df['Total'] = pivot_df.get('Female', 0) + pivot_df.get('Male', 0)
 
-# Reset index to display
-pivot_df.reset_index(inplace=True)
+        # Reset index to display
+        pivot_df.reset_index(inplace=True)
 
-# Merge repeated event values for display
-pivot_df['Event'] = pivot_df['Event'].mask(pivot_df['Event'].duplicated(), '')
+        # Merge repeated event values for display
+        pivot_df['Event'] = pivot_df['Event'].mask(pivot_df['Event'].duplicated(), '')
+    else:
+        Data  = pd.DataFrame() 
+        st.info("No data loaded yet. Please upload a file first on the main page.")   
+
+
 
 stat = st.button("Get Statistics")
 
