@@ -59,6 +59,9 @@ if "my_data" in st.session_state:
     if isinstance(st.session_state["my_data"], pd.DataFrame):
         # Access the DataFrame
         Data = st.session_state["my_data"]
+    else:
+        data  = pd.DataFrame() 
+        st.info("No data loaded yet. Please upload a file first on the main page.")    
 
 events_df = pd.melt(Data, id_vars=['full name', 'Age Group', 'Sex'],
                     value_vars=['Event 1', 'Event 2', 'Event 3'],
