@@ -102,8 +102,8 @@ def get_participants(data):
                 (participants['Age Group'] == age) & (participants['Sex'] == gender)  # Filter by Age Group and Sex
             ]
 
-        
-    participants = participants.sort_values(by='full name')
+    # participants = participants.sort_values(by='full name')
+    participants = participants.groupby("Age Group").apply(lambda x: x.sort_values("full name")).reset_index(drop=True)
 
     athletes = []
     for _, row in participants.iterrows():
@@ -123,7 +123,6 @@ athletes,parti = get_participants(data) if data is not None and not data.empty e
 if parti is not None and not parti.empty:
     selected = ['full name','Sex','Age Group','Chest_no','Date Of Birth','Event 1','Event 2','Event 3']
     st.dataframe(parti[selected].reset_index(drop=True),use_container_width=True)
-
 
 # Template mapping
 template_mapping = {
@@ -145,12 +144,13 @@ template_mapping = {
     "110 M Hurdles": "sprint_template.docx",
     "200 M Hurdles": "sprint_template.docx",
     "400 M Hurdles": "sprint_template.docx",
+    "300 M Hurdles": "sprint_template.docx",
     "High Jump": "jumping_template.docx",
     "Pole Vault": "jumping_template.docx",
     "Total List":"Total_list.docx"
 }
 
-def chunk_athletes(athletes, chunk_size=15):
+def chunk_athletes(athletes, chunk_size=17):
     chunks = []
     for i in range(0, len(athletes), chunk_size):
         chunk = athletes[i:i + chunk_size]
@@ -161,13 +161,14 @@ def chunk_athletes(athletes, chunk_size=15):
     return chunks
 
 if template_mapping.get(sub_event) == "jumping_template.docx":
-    athlete_chunks = chunk_athletes(athletes,9)
+    athlete_chunks = chunk_athletes(athletes,10)
+elif template_mapping.get(sub_event) == "long_jump_template.docx":
+    athlete_chunks = chunk_athletes(athletes,19)    
 else:
     athlete_chunks = chunk_athletes(athletes)
 
 def create_zip_of_docx_files(athlete_chunks, schedule_time, date, event, sub_event, age, gender):
     zip_io = BytesIO()
-
     # Create a zip file in memory
     with zipfile.ZipFile(zip_io, 'w', zipfile.ZIP_DEFLATED) as zipf:
         try:
