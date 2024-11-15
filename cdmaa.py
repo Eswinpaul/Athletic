@@ -11,7 +11,7 @@ home_page = st.Page(
 
 project_1_page = st.Page(
     page="views/generate.py",
-    title="Contact",
+    title="Statistics",
     icon=":material/contacts:",
 )  
 
