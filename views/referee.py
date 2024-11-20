@@ -15,7 +15,7 @@ if "my_data" in st.session_state:
     if isinstance(st.session_state["my_data"], pd.DataFrame):
         # Access the DataFrame
         data = st.session_state["my_data"]
-        Total = data[["Chest_no","full name","Date Of Birth",'Mobile Number','Email address','Blood Group ','Emergency Contact  Mobile no','Address',"Age Group","Event 1","Event 2","Event 3"]].copy()
+        Total = data[["Chest_no","full name","Date Of Birth",'Mobile Number','Email address','Blood Group ','Emergency Contact  Mobile no','Address ',"Age Group","Event 1","Event 2","Event 3"]].copy()
         Total_list = Total.values.tolist()            
         chunks_total = chunk_list(Total_list, 10)
       
