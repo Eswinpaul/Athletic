@@ -54,7 +54,7 @@ if uploaded_file is not None:
         Data = pd.read_excel(d,sheet_name = "Form responses 1")
         data = Data[['Name (Fill the name in Capital Letters )', 'Second part of name/Initial(s)/ Second Name' ,'Date of Birth', 'Mobile Number','Email address','Sex', 'Blood Group','Emergency Contact  Mobile no','Address','Age (As on 25.02.2026)',
                     'Event 1', 'Event 2', 'Event 3']].copy()
-        # data['Member Status'] = Data.iloc[:, 22].fillna(Data.iloc[:, 34])
+        data['Member Status'] = Data.iloc[:, 24].fillna(Data.iloc[:, 34])
         data['Member Status'] = data['Member Status'].str.lower().apply(lambda x: 'New' if 'New member' in x else 'Old')
         data['Member Status'] = (
     data['Member Status']
@@ -111,6 +111,7 @@ if uploaded_file is not None:
           
 else:
     st.info("Please upload a CSV or XLSX file.")
+
 
 
 
