@@ -54,19 +54,19 @@ if uploaded_file is not None:
         Data = pd.read_excel(d,sheet_name = "Form responses 1")
         data = Data[['Name (Fill the name in Capital Letters )', 'Second part of name/Initial(s)/ Second Name' ,'Date of Birth', 'Mobile Number','Email address','Sex ', 'Blood Group ','Emergency Contact  Mobile no','Address ','Age (As on 25.02.2026)',
                     'Event 1', 'Event 2', 'Event 3']].copy()
-        data['Member Status'] = Data.iloc[:, 22].fillna(Data.iloc[:, 34])
-        # data['Member Status'] = data['Member Status'].str.lower().apply(lambda x: 'New' if 'new member' in x else 'Old')
+        # data['Member Status'] = Data.iloc[:, 22].fillna(Data.iloc[:, 34])
+        data['Member Status'] = data['Member Status'].str.lower().apply(lambda x: 'New' if 'New member' in x else 'Old')
         data['Member Status'] = (
     data['Member Status']
     .fillna('')  # Convert NaN to an empty string
     .str.lower()
-    .apply(lambda x: 'New' if 'new member' in x else 'Old')
+    .apply(lambda x: 'New' if 'New member' in x else 'Old')
 )
         data.rename(columns={'Date of Birth': 'Date Of Birth','Sex ':'Sex'}, inplace=True)
 
         # Convert '7. Date of Birth' to datetime format
         data['Birthday'] = pd.to_datetime(data['Date Of Birth'], errors='coerce')
-        data['full name'] = data['Name'].str.cat(data['Initial(s) (can use space)'], sep=' ')
+        data['full name'] = data['Name (Fill the name in Capital Letters )'].str.cat(data['Second part of name/Initial(s)/ Second Name'], sep=' ')
 
         st.info("File Uploaded Successfully!")
         st.subheader("Select the filters")
@@ -111,6 +111,7 @@ if uploaded_file is not None:
           
 else:
     st.info("Please upload a CSV or XLSX file.")
+
 
 
 
