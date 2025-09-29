@@ -62,7 +62,7 @@ if uploaded_file is not None:
     .str.lower()
     .apply(lambda x: 'New' if 'new member' in x else 'Old')
 )
-        data.rename(columns={'7. Date of Birth': 'Date Of Birth','Sex ':'Sex'}, inplace=True)
+        data.rename(columns={'Date of Birth': 'Date Of Birth','Sex ':'Sex'}, inplace=True)
 
         # Convert '7. Date of Birth' to datetime format
         data['Birthday'] = pd.to_datetime(data['Date Of Birth'], errors='coerce')
@@ -111,5 +111,6 @@ if uploaded_file is not None:
           
 else:
     st.info("Please upload a CSV or XLSX file.")
+
 
 
