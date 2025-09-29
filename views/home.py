@@ -69,7 +69,30 @@ if uploaded_file is not None:
     else:
         d = pd.ExcelFile(uploaded_file) 
         Data = pd.read_excel(d,sheet_name = "Form responses 1")
-        data = Data[['Name (Fill the name in Capital Letters )', 'Second part of name/Initial(s)/ Second Name' ,'Date of Birth', 'Mobile Number','Email address','Sex', 'Blood Group','Emergency Contact  Mobile no','Address','Age (As on 25.02.2026)','Event 1', 'Event 2', 'Event 3','Member Confirmation']].copy()
+        Data.columns = [str(c).strip() for c in Data.columns]
+        required_cols = [
+    'Name (Fill the name in Capital Letters )',
+    'Second part of name/Initial(s)/ Second Name',
+    'Date of Birth',
+    'Mobile Number',
+    'Email address',
+    'Sex',
+    'Blood Group',
+    'Emergency Contact  Mobile no',
+    'Address',
+    'Age (As on 25.02.2026)',
+    'Event 1',
+    'Event 2',
+    'Event 3',
+    'Member Confirmation'
+]
+
+# Select only the columns that exist in the DataFrame (optional safeguard)
+        existing_cols = [c for c in required_cols if c in Data.columns]
+
+# Make a copy for processing
+        data = Data[existing_cols].copy()
+        # data = Data[['Name (Fill the name in Capital Letters )', 'Second part of name/Initial(s)/ Second Name' ,'Date of Birth', 'Mobile Number','Email address','Sex', 'Blood Group','Emergency Contact  Mobile no','Address','Age (As on 25.02.2026)','Event 1', 'Event 2', 'Event 3','Member Confirmation']].copy()
         data['Member Status'] = Data['Member Confirmation'].str.lower().apply(lambda x: 'New' if 'new member' in x else 'Old')
         # data['Member Status'] = (
 #     data['Member Status']
@@ -126,6 +149,7 @@ if uploaded_file is not None:
           
 else:
     st.info("Please upload a CSV or XLSX file.")
+
 
 
 
