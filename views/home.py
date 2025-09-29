@@ -57,11 +57,11 @@ if uploaded_file is not None:
         data['Member Status'] = Data.iloc[:, 24].fillna(Data.iloc[:, 34])
         data['Member Status'] = data['Member Status'].str.lower().apply(lambda x: 'New' if 'New member' in x else 'Old')
         data['Member Status'] = (
-#     data['Member Status']
-#     .fillna('')  # Convert NaN to an empty string
-#     .str.lower()
-#     .apply(lambda x: 'New' if 'New member' in x else 'Old')
-# )
+    data['Member Status']
+    .fillna('')  # Convert NaN to an empty string
+    .str.lower()
+    .apply(lambda x: 'New' if 'New member' in x else 'Old')
+)
         data.rename(columns={'Date of Birth': 'Date Of Birth','Sex':'Sex'}, inplace=True)
 
         # Convert '7. Date of Birth' to datetime format
@@ -111,6 +111,7 @@ if uploaded_file is not None:
           
 else:
     st.info("Please upload a CSV or XLSX file.")
+
 
 
 
