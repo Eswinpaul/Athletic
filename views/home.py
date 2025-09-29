@@ -29,7 +29,10 @@ def process_data(data):
     data[['Event 1', 'Event 2', 'Event 3']] = data[['Event 1', 'Event 2', 'Event 3']].apply(lambda col: col.map(lambda x: x.title() if isinstance(x, str) else x))
     data['Age Group'] = data['Birthday'].apply(get_age_group)
     data["Mobile Number"] = data["Mobile Number"].apply(lambda x: str(int(x)) if pd.notnull(x) else "")
-    data['Emergency Contact  Mobile no'] = data['Emergency Contact  Mobile no'].apply(lambda x: str(int(x)) if pd.notnull(x) else "")
+    # data['Emergency Contact  Mobile no'] = data['Emergency Contact  Mobile no'].apply(lambda x: str(int(x)) if pd.notnull(x) else "")
+    data['Emergency Contact  Mobile no'] = data['Emergency Contact  Mobile no'].apply(
+    lambda x: re.sub(r'\D', '', str(x))[-10:] if pd.notnull(x) and len(re.sub(r'\D', '', str(x))) >= 10 else ""
+)
     event_columns = ['Event 1', 'Event 2', 'Event 3']
     data[event_columns] = data[event_columns].apply(lambda col: col.str.replace(r'\s*\(.*?\)\s*', '', regex=True))
 
@@ -149,6 +152,7 @@ if uploaded_file is not None:
           
 else:
     st.info("Please upload a CSV or XLSX file.")
+
 
 
 
