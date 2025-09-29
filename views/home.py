@@ -34,12 +34,29 @@ def process_data(data):
     data[event_columns] = data[event_columns].apply(lambda col: col.str.replace(r'\s*\(.*?\)\s*', '', regex=True))
 
 
-def assign_chest_no(group):
-    group = group.sort_values(by="full name").reset_index(drop=True)
-    age_prefix = int(group['Age Group'].iloc[0].split('+')[0]) * 100  # e.g., 30+ -> 3000
-    group['Chest_no'] = [age_prefix + i for i in range(1, len(group) + 1)]
+# def assign_chest_no(group):
+#     group = group.sort_values(by="full name").reset_index(drop=True)
+#     age_prefix = int(group['Age Group'].iloc[0].split('+')[0]) * 100  # e.g., 30+ -> 3000
+#     group['Chest_no'] = [age_prefix + i for i in range(1, len(group) + 1)]
 
-    return group
+#     return group
+def assign_chest_no(data):
+    # First, sort by Age Group, Sex, and full name alphabetically
+    data = data.sort_values(by=['Age Group', 'Sex', 'full name']).reset_index(drop=True)
+
+    # Function to assign chest numbers within each Age Group + Sex subgroup
+    def chest_number_subgroup(group):
+        # Get age prefix from 'Age Group', e.g., 30+ -> 3000
+        age_prefix = int(group['Age Group'].iloc[0].split('+')[0]) * 100
+        # Assign chest numbers starting from age_prefix + 1
+        group['Chest_no'] = [age_prefix + i for i in range(1, len(group) + 1)]
+        return group
+
+    # Group by Age Group and Sex, then apply chest number assignment
+    data = data.groupby(['Age Group', 'Sex'], group_keys=False).apply(chest_number_subgroup)
+
+    return data
+
 
 if "my_data" not in st.session_state:
     st.session_state["my_data"] = ""
@@ -110,6 +127,7 @@ if uploaded_file is not None:
           
 else:
     st.info("Please upload a CSV or XLSX file.")
+
 
 
 
