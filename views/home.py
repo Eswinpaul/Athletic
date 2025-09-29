@@ -57,11 +57,11 @@ if uploaded_file is not None:
         data['Member Status'] = Data.iloc[:, 24].fillna(Data.iloc[:, 34])
         data['Member Status'] = data['Member Status'].str.lower().apply(lambda x: 'New' if 'New member' in x else 'Old')
         data['Member Status'] = (
-    data['Member Status']
-    .fillna('')  # Convert NaN to an empty string
-    .str.lower()
-    .apply(lambda x: 'New' if 'New member' in x else 'Old')
-)
+#     data['Member Status']
+#     .fillna('')  # Convert NaN to an empty string
+#     .str.lower()
+#     .apply(lambda x: 'New' if 'New member' in x else 'Old')
+# )
         data.rename(columns={'Date of Birth': 'Date Of Birth','Sex':'Sex'}, inplace=True)
 
         # Convert '7. Date of Birth' to datetime format
@@ -89,7 +89,7 @@ if uploaded_file is not None:
             data['Date Of Birth'] = data['Date Of Birth'].dt.strftime('%d-%m-%Y')
             data.drop(columns=['Birthday','Name','Initial(s) (can use space)'], inplace=True)
             data = data.reset_index(drop=True)    #############
-            data = data[['Chest_no','full name','Date Of Birth', 'Age Group','Mobile Number','Email address','Sex', 'Blood Group ','Emergency Contact  Mobile no','Address ','Age (As on 22.02.2025)',
+            data = data[['Chest_no','full name','Date Of Birth', 'Age Group','Mobile Number','Email address','Sex', 'Blood Group','Emergency Contact  Mobile no','Address','Age (As on 25.02.2026)',
                     'Event 1', 'Event 2', 'Event 3','Member Status']].copy()
             
             
@@ -111,6 +111,7 @@ if uploaded_file is not None:
           
 else:
     st.info("Please upload a CSV or XLSX file.")
+
 
 
 
